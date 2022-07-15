@@ -30,6 +30,7 @@ def test_daily_mean_integers():
     # Need to use Numpy testing functions to compare arrays
     npt.assert_array_equal(daily_mean(test_input), test_result)
 
+
 def test_daily_max_integers():
     from inflammation.models import daily_max
 
@@ -38,6 +39,7 @@ def test_daily_max_integers():
                            [4, 7]])
     test_result = np.array([5, 7])
     npt.assert_array_equal(daily_max(test_input), test_result)
+
 
 def test_daily_min_integers():
     from inflammation.models import daily_min
@@ -48,6 +50,7 @@ def test_daily_min_integers():
     test_result = np.array([1, 2])
     npt.assert_array_equal(daily_min(test_input), test_result)
 
+
 def test_daily_min_string():
     """Test for TypeError when passing strings"""
     from inflammation.models import daily_min
@@ -55,17 +58,18 @@ def test_daily_min_string():
     with pytest.raises(TypeError):
         error_expected = daily_min([['Hello', 'there'], ['General', 'Kenobi']])
 
+
 @pytest.mark.parametrize(
     "test, expected",
     [
         ([[0, 0], [0, 0], [0, 0]], [0, 0]),
         ([[1, 2], [3, 4], [5, 6]], [3, 4]),
     ])
-
 def test_daily_mean(test, expected):
     """Test mean function works for array of zeroes and positive integers."""
     from inflammation.models import daily_mean
     npt.assert_array_equal(daily_mean(np.array(test)), np.array(expected))
+
 
 @pytest.mark.parametrize(
     "input, output",
@@ -77,6 +81,7 @@ def test_daily_max(input, output):
     from inflammation.models import daily_max
     npt.assert_array_equal(daily_max(np.array(input)), np.array(output))
 
+
 @pytest.mark.parametrize(
     "input, output",
     [
@@ -86,3 +91,18 @@ def test_daily_max(input, output):
 def test_daily_min(input, output):
     from inflammation.models import daily_min
     npt.assert_array_equal(daily_min(np.array(input)), np.array(output))
+
+
+@pytest.mark.parametrize(
+    "test, expected",
+    [
+        ([[1, 2, 3], [4, 5, 6], [7, 8, 9]], [[0.33, 0.67, 1], [0.67, 0.83, 1], [0.78, 0.89, 1]]),
+        ([[0, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 0, 0], [0, 0, 0]]),
+        ([[1, 1, 1], [1, 1, 1], [1, 1, 1]], [[1, 1, 1], [1, 1, 1], [1, 1, 1]]),
+        ([[1, 2, 3], [4, 5, 6], [7, 8, 9]], [[0.33, 0.67, 1], [0.67, 0.83, 1], [0.78, 0.89, 1]]),
+    ])
+def test_patient_normalise(test, expected):
+    """Test normalisation works for arrays of one and positive integers.
+       Assumption that test accuracy of two decimal places is sufficient."""
+    from inflammation.models import patient_normalise
+    npt.assert_almost_equal(patient_normalise(np.array(test)), np.array(expected), decimal=2)
